@@ -18,7 +18,7 @@
 #define PI				3.14159265
 #define GAME_WIDTH		1000
 #define GAME_HEIGHT		SCREEN_HEIGHT
-#define TARGET_SCORE	20
+#define TARGET_SCORE	1
 
 /**
  * GSTATE_STOPPED	Game stopped
@@ -50,6 +50,7 @@ private:
 	ALLEGRO_SAMPLE_INSTANCE *m_gameSoundInstance;
 	ALLEGRO_SAMPLE_INSTANCE *m_smashSoundInstance;
 private:
+	void InitSounds();
 	void StartServer();
 	void AddPointExceptFor(int player);
 	int PlayerWon();
@@ -77,6 +78,8 @@ public:
 	bool isGameStarted();
 	double GetTimer();
 	State GetGameState();
+
+	void ResetGame();
 };
 
 #endif

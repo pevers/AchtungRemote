@@ -38,6 +38,7 @@ bool ScreenManager::SetScreen(int id)
 	if(m_screens.find(id) == m_screens.end())
 		return false;
 	m_currentScreen = m_screens[id];
+	m_currentScreen->ResetTimeStamp();
 	return true;
 }
 

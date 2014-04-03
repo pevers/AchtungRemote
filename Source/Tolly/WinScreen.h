@@ -11,6 +11,8 @@
 #include <allegro5/allegro_primitives.h>
 #include <string>
 
+#define	WINDELAY	5
+
 class WinScreen : public Screen
 {
 private:

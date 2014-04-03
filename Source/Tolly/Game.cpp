@@ -5,8 +5,10 @@ Game::Game():m_gameSound(NULL), m_gameSoundInstance(NULL), m_smashSound(NULL), m
 	Settings sett;
 	sett.gamespeed = SPEED_MEDIUM;
 	sett.name = "Default Achtung Server";
+	
 	CreateGame(sett);
-
+	InitSounds();
+	
 	srand(time(0));
 }
 
@@ -28,21 +30,10 @@ Game::~Game() {
 }
 
 /**
- * Create a game with the given settings.
+ * Load the game sounds.
  */
-void Game::CreateGame(Settings settings)
+void Game::InitSounds()
 {
-	if(settings.gamespeed <= SPEED_UNDEFINED)
-		settings.gamespeed = SPEED_MEDIUM;
-	
-	m_settings = settings;
-
-	// create thread to run server
-	m_hive = boost::shared_ptr<Hive>(new Hive());
-	m_server = boost::shared_ptr<GameServer>(new GameServer(m_hive->GetService(), settings.name));
-	m_serverThread = boost::thread(&Game::StartServer, this);
-	SetGameState(GSTATE_STOPPED);	// Game state is stopped because the players are waiting in queue
-
 	// load sounds, don't bother any errors
 	al_reserve_samples(1);
 	m_gameSound = al_load_sample("Audio/rick.wav");
@@ -60,6 +51,23 @@ void Game::CreateGame(Settings settings)
 	{
 		std::cout << "[DEBUG]: Can't load the super awesome song!" << std::endl;
 	}
+}
+
+/**
+ * Create a game with the given settings.
+ */
+void Game::CreateGame(Settings settings)
+{
+	if(settings.gamespeed <= SPEED_UNDEFINED)
+		settings.gamespeed = SPEED_MEDIUM;
+	
+	m_settings = settings;
+
+	// create thread to run server
+	m_hive = boost::shared_ptr<Hive>(new Hive());
+	m_server = boost::shared_ptr<GameServer>(new GameServer(m_hive->GetService(), settings.name));
+	m_serverThread = boost::thread(&Game::StartServer, this);
+	SetGameState(GSTATE_STOPPED);	// Game state is stopped because the players are waiting in queue
 }
 
 void Game::StopGame()
@@ -342,4 +350,13 @@ void Game::SetGameState(State state)
 		m_server->SetServerState(SERVER_GAME_STARTED);	// close the server
 	else if(state == GSTATE_ENDED)
 		m_server->SetServerState(SERVER_ACCEPT);	// open server for connections		
+}
+
+/**
+ * Reset the complete game so players can rejoin.
+ */
+void Game::ResetGame()
+{
+	m_server->ClearServer();
+	SetGameState(GSTATE_STOPPED);
 }

@@ -225,3 +225,12 @@ int GameServer::FindPlayer(int id)
 	}
 	return -1;
 }
+
+/**
+ * Clear all the connections so new connections can join the game.
+ */
+void GameServer::ClearServer()
+{
+	m_players.clear();
+	SetServerState(SERVER_ACCEPT);
+}

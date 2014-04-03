@@ -8,9 +8,14 @@
 
 class Screen
 {
+private:
+	double m_timestamp;
 public:
 	virtual int Update() = 0;
 	virtual void Draw(ALLEGRO_DISPLAY *display) = 0;
+
+	void ResetTimeStamp();
+	double GetTimeStamp();
 };
 
 #endif
