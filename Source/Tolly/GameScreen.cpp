@@ -38,7 +38,7 @@ void GameScreen::Draw(ALLEGRO_DISPLAY *display)
 	// draw snake parts
 	float centerX = (SCREEN_WIDTH - GAME_WIDTH - 4) / 2;
 	float marginY = SCREEN_HEIGHT / 6;
-	for(int i = 0; i < players.size(); i++)
+	for(int i = 0; i < (int)players.size(); i++)
 	{
 		// draw scores and name
 		al_draw_text(m_nameFont, players[i].GetRGBColor(), GAME_WIDTH + 6, i * marginY, ALLEGRO_ALIGN_LEFT, players[i].GetController()->name.c_str());
@@ -47,7 +47,7 @@ void GameScreen::Draw(ALLEGRO_DISPLAY *display)
 		al_draw_text(m_scoreFont, players[i].GetRGBColor(), GAME_WIDTH + centerX, i * marginY + marginY/2-30, ALLEGRO_ALIGN_CENTER, convert.str().c_str());
 
 		std::vector<Position> pieces = players[i].GetPieces();
-		for(int j = 0; j < pieces.size(); j++)
+		for(int j = 0; j < (int)pieces.size(); j++)
 		{
 			if(!(m_game->GetGameState() == GSTATE_PRESTART && !Blink()))
 				al_draw_filled_circle(pieces[j].x, pieces[j].y, 2, players[i].GetRGBColor());

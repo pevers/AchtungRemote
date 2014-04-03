@@ -9,6 +9,7 @@ struct PlayerController
 {
 	std::string name;
 	int input;	// NONE, LEFT or RIGHT
+	int id;	// random identifier
 };
 
 #endif

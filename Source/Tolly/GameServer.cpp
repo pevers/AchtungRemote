@@ -2,6 +2,7 @@
 
 GameServer::GameServer(boost::asio::io_service &ioService, std::string name) : Connection(ioService), m_serverState(SERVER_ACCEPT)
 {
+	srand( static_cast<unsigned int>(time(NULL)));
 	m_name = name;
 	Recv();
 }
@@ -79,13 +80,17 @@ void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 			for(int i = 2; i < (int)buffer.size(); i++)
 				name += (char)buffer[i];	// convert to ASCII
 
+			// create random identifier between 0 and UCHAR_MAX
+			int id = rand() % UCHAR_MAX;
+
 			// don't allow names with more than 8 characters
 			name = name.substr(0, 8);
 			controller.name = name;
+			controller.id = id;
 			m_players.push_back(controller);
 
 			// send OK
-			SendOK(m_players.size()-1);
+			SendOK(m_players.size()-1, id);
 		}
 	}
 	else if(buffer[0] == MESSAGE_CONTROL)
@@ -94,10 +99,11 @@ void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 		std::cout << "[DEBUG]: Control message received" << std::endl;
 
 		int id = buffer[1];
-		if((int)m_players.size() <= id)
+		int index = FindPlayer(id);
+		if(index < 0)
 			return;
 
-		m_players[id].input = buffer[2];
+		m_players[index].input = buffer[2];
 	}
 	else if(buffer[0] == MESSAGE_START)
 	{
@@ -117,11 +123,12 @@ void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 		if(m_serverState == SERVER_ACCEPT || m_serverState == SERVER_ENDED)
 		{
 			int id = buffer[1];
-			if((int)m_players.size() <= id)
+			int index = FindPlayer(id);
+			if(index < 0)
 				return;
 
 			std::cout << "[DEBUG]: Removing player " << id << std::endl;
-			m_players.erase(m_players.begin() + id);
+			m_players.erase(m_players.begin() + index);
 		}
 	}
 	else if(buffer[0] == MESSAGE_HELLO)
@@ -138,15 +145,17 @@ void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 }
 
 /**
- * Send OK message with the uid in the header as identifier.
+ * Send OK message to the player containing:
+ *	player	the player number (0 ... 5)
+ *	uid		the unique identifier needed for the client to send messages.
  */
-void GameServer::SendOK(int uid)
+void GameServer::SendOK(int player, int uid)
 {
 	std::vector<uint8_t> data;
 	data.push_back(MESSAGE_VERIFY);
+	data.push_back((uint8_t)0);	// server id
+	data.push_back((uint8_t)player);
 	data.push_back((uint8_t)uid);
-	std::string message = "OK";
-	std::copy(message.begin(), message.end(), back_inserter(data));
 	Send(data);
 }
 
@@ -190,7 +199,7 @@ std::vector<PlayerController> *GameServer::GetPlayerControllers()
  */
 void GameServer::FlushPlayerControllers()
 {
-	for(int i = 0; i < m_players.size(); i++)
+	for(int i = 0; i < (int)m_players.size(); i++)
 		m_players[i].input = NONE;
 }
 
@@ -200,4 +209,18 @@ void GameServer::FlushPlayerControllers()
 std::string GameServer::GetServerName()
 {
 	return m_name;
+}
+
+/**
+ * Find the player with <id> and return the index.
+ * @return index of the player or -1 when the player is not found.
+ */
+int GameServer::FindPlayer(int id)
+{
+	for(int i = 0; i < (int)m_players.size(); i++)
+	{
+		if(m_players[i].id == id)
+			return i;
+	}
+	return -1;
 }

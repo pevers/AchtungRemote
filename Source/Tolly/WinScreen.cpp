@@ -25,7 +25,7 @@ void WinScreen::Draw(ALLEGRO_DISPLAY *display)
 	std::vector<Player> players = m_game->GetPlayers();
 	std::sort(players.begin(), players.end(), std::greater<Player>());
 
-	for(int i = 0; i < players.size(); i++)
+	for(int i = 0; i < (int)players.size(); i++)
 	{
 		std::ostringstream tmp;
 		tmp << players[i].GetScore();

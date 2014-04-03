@@ -6,12 +6,13 @@
 #include "Settings.h"
 
 #include <string>
+#include <time.h>
 
 /**
  * Protocol:
  *  Header - 2 bytes
  *		[0] = type, HELLO (c/s), SERVER_INFO (s), NEW (c), VERIFY (s), CONTROL (c), QUIT (c/s), START (c/s), FULL (s), STATUS (s)
- *		[1] = id, 0 = master, rest = slave
+ *		[1] = client id, server = 0, player 1 = 1, ...
  *
  *	 HELLO - Sent by the client to search for servers, servers respond with a SERVER_INFO message.
  *	 MESSAGE_SERVERINFO - Send server name to the client.
@@ -21,7 +22,7 @@
  *	 QUIT - The client sends a QUIT message to bounce the queue; the server sends this command to stop the game.
  *	 START - The master client can send this command to remotely start the game. Server respond with a STATUS message.
  *	 FULL - Sent by the server as a respons to the NEW command if the server is full.
- *	 MESSAGE_STATUS - Sent by the server to inform the client with the server status, the payload contains the status. (TODO: Not yet implemented)
+ *	 STATUS - Sent by the server to inform the client with the server status, the payload contains the status. (TODO: Not yet implemented)
  *		Client:
  *			<name>	// client identify itself with a name
  *			[0]		// control data (left, right or none)
@@ -46,9 +47,11 @@ private:
 	void TranslateMessage(std::vector<uint8_t> buffer);
 	
 	/**
-	 * Send OK message with the uid in the header as identifier.
+	 * Send OK message to the player containing:
+	 *	player	the player number (0 ... 5)
+	 *	uid		the unique identifier needed for the client to send messages.
 	 */
-	void SendOK(int uid);
+	void SendOK(int role, int uid);
 
 	/**
 	 * Send ServerInfo message containing the server name.
@@ -59,6 +62,12 @@ private:
 	 * Send FULL message in a respons to a NEW command on a full server.
 	 */
 	void SendFull();
+
+	/**
+	 * Find the player with <id> and return the index.
+	 * @return index of the player or -1 when the player is not found.
+	 */
+	int FindPlayer(int id);
 public:
 	GameServer(boost::asio::io_service &ioService, std::string name);
 	~GameServer();
