@@ -6,7 +6,7 @@
 #include "Settings.h"
 
 #include <string>
-#include <time.h>
+#include <ctime>
 
 /**
  * Protocol:

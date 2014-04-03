@@ -2,7 +2,6 @@
 
 GameServer::GameServer(boost::asio::io_service &ioService, std::string name) : Connection(ioService), m_serverState(SERVER_ACCEPT)
 {
-	srand( static_cast<unsigned int>(time(NULL)));
 	m_name = name;
 	Recv();
 }
@@ -59,6 +58,8 @@ int GameServer::GetServerState()
  */
 void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 {
+	srand( static_cast<unsigned int>(time(0)));
+
 	if(buffer.size() < 2)
 		return;
 
@@ -80,8 +81,8 @@ void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 			for(int i = 2; i < (int)buffer.size(); i++)
 				name += (char)buffer[i];	// convert to ASCII
 
-			// create random identifier between 0 and UCHAR_MAX
-			int id = rand() % UCHAR_MAX;
+			// create random identifier between 0 and 128
+			int id = abs(rand() % SCHAR_MAX);
 
 			// don't allow names with more than 8 characters
 			name = name.substr(0, 8);
