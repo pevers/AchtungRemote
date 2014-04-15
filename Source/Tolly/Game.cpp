@@ -350,7 +350,7 @@ void Game::SetGameState(State state)
 	// set server settings according to the game state
 	if(state == GSTATE_PRESTART)
 		m_server->SetServerState(SERVER_GAME_STARTED);	// close the server
-	else if(state == GSTATE_ENDED)
+	else if(state == GSTATE_STOPPED)
 		m_server->SetServerState(SERVER_ACCEPT);	// open server for connections		
 }
 

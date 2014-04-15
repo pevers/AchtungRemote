@@ -11,7 +11,7 @@ int main(int argc, char **argv)
    ALLEGRO_EVENT ev;
  
    if(!al_init()) {
-      al_show_native_message_box(NULL, NULL, NULL, "Could not initialize Allegro 5", NULL, NULL);
+      al_show_native_message_box(NULL, NULL, NULL, "Could not initialize Allegro 5, make sure Allegro is installed.", NULL, NULL);
       return -1;
    }
  
@@ -21,7 +21,7 @@ int main(int argc, char **argv)
 
    if(!display)
    {
-	   al_show_native_message_box(display, "Tolly", "Display Settings", "Display Window was not created successfully", NULL, ALLEGRO_MESSAGEBOX_ERROR);
+	   al_show_native_message_box(display, "Tolly", "Display Settings", "Display Window was not created successfully.", NULL, ALLEGRO_MESSAGEBOX_ERROR);
 	   return -1;
    }
 

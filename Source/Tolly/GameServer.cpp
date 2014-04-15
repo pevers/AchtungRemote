@@ -168,8 +168,6 @@ void GameServer::SendFull()
 	std::vector<uint8_t> data;
 	data.push_back(MESSAGE_FULL);
 	data.push_back((uint8_t)0);
-	std::string message = "FULL";
-	std::copy(message.begin(), message.end(), back_inserter(data));
 	Send(data);
 }
 
