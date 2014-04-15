@@ -7,7 +7,7 @@ ALLEGRO_COLOR ColorToRGB(COLORS color)
 	return rgb[color];
 }
 
-Player::Player(int color, Position pos, float alpha, PlayerController *controller) : m_gap(0), m_dead(false), m_score(0) {
+Player::Player(int color, Position pos, float alpha, PlayerController *controller) : m_gap(10), m_dead(false), m_score(0) {
 	m_color = static_cast<COLORS>(color);
 	m_alpha = alpha;
 	m_controller = controller;
@@ -27,8 +27,11 @@ Position Player::GetPosition() {
 
 void Player::SetPosition(Position pos) {
 	m_pos = pos;
+	
+	// create a gap
+	if(m_gap > 6)
+		m_pieces.push_back(pos);
 	m_gap++;
-	m_pieces.push_back(pos);
 }
 
 void Player::SetPosition(float x, float y) {

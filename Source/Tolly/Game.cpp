@@ -119,8 +119,8 @@ int Game::Update()
 			if(m_players[i].GetLastGap() > 200 && rand() % 10 == 0)
 			{
 				// gap
-				x += 15*cos(alpha * 180.0 / PI);
-				y += 15*sin(alpha * 180.0 / PI);
+			//	x += 15*cos(alpha * 180.0 / PI);
+			//	y += 15*sin(alpha * 180.0 / PI);
 				m_players[i].SetGap();
 			}
 
