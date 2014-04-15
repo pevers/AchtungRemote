@@ -15,7 +15,9 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_image.h>
+#include <fstream>
 
+#define CONFIG_FILE	"settings.cfg"
 #define GAME_TICKS 40
 
 #endif

@@ -4,12 +4,9 @@
 Game::Game():m_gameSound(NULL), m_gameSoundInstance(NULL), m_smashSound(NULL), m_smashSoundInstance(NULL) {
 	Settings sett;
 	sett.gamespeed = SPEED_MEDIUM;
-	sett.name = "Default Achtung Server";
+	sett.name = "Default Tolly Server";
 	
 	CreateGame(sett);
-	InitSounds();
-	
-	srand(time(0));
 }
 
 Game::Game(Settings settings) {
@@ -68,6 +65,10 @@ void Game::CreateGame(Settings settings)
 	m_server = boost::shared_ptr<GameServer>(new GameServer(m_hive->GetService(), settings.name));
 	m_serverThread = boost::thread(&Game::StartServer, this);
 	SetGameState(GSTATE_STOPPED);	// Game state is stopped because the players are waiting in queue
+
+	InitSounds();
+	
+	srand(time(0));
 }
 
 void Game::StopGame()
