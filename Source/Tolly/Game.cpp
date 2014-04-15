@@ -156,6 +156,7 @@ int Game::Update()
 			else
 			{
 				// play collision sound
+				al_stop_sample_instance(m_smashSoundInstance);
 				al_play_sample_instance(m_smashSoundInstance);
 
 				// player died!

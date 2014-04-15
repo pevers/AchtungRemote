@@ -17,7 +17,7 @@ int main(int argc, char **argv)
  
    al_set_new_display_flags(ALLEGRO_WINDOWED);
    display = al_create_display(SCREEN_WIDTH, SCREEN_HEIGHT);
-   al_set_window_title(display, "AchtungApp");
+   al_set_window_title(display, "Tolly");
 
    if(!display)
    {
