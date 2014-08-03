@@ -1,6 +1,8 @@
 #ifndef MAIN_H__
 #define MAIN_H__
 
+#define ALLEGRO_STATICLINK
+
 #include "Game.h"
 #include "InputStateManager.h"
 #include "ScreenManager.h"

@@ -1,6 +1,10 @@
 #ifndef SCREEN_H__
 #define SCREEN_H__
 
+#ifndef _DEBUG
+#define ALLEGRO_STATICLINK
+#endif 
+
 #include <allegro5/allegro.h>
 
 #define SCREEN_WIDTH	1152
