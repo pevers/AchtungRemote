@@ -4,12 +4,12 @@
 Game::Game():m_gameSound(NULL), m_gameSoundInstance(NULL), m_smashSound(NULL), m_smashSoundInstance(NULL) {
 	Settings sett;
 	sett.gamespeed = SPEED_MEDIUM;
-	sett.name = "Default Tolly Server";
+	sett.name = "Default Achtung Server";
 	
 	CreateGame(sett);
 }
 
-Game::Game(Settings settings) {
+Game::Game(Settings settings):m_gameSound(NULL), m_gameSoundInstance(NULL), m_smashSound(NULL), m_smashSoundInstance(NULL) {
 	CreateGame(settings);
 }
 
@@ -33,20 +33,21 @@ void Game::InitSounds()
 {
 	// load sounds, don't bother any errors
 	al_reserve_samples(1);
-	m_gameSound = al_load_sample("Audio/rick.wav");
-	m_smashSound = al_load_sample("Audio/smash.wav");
+	//m_gameSound = al_load_sample("Audio/rick.wav");
+	//m_smashSound = al_load_sample("Audio/smash.wav");
+	m_smashSound = al_load_sample_f(load_punch(), ".wav");
+	//m_gameSound = al_load_sample_f(load_bigbounce(), ".wav");
 
-	if(m_gameSound && m_smashSound)
+	if(m_smashSound)
 	{
-		m_gameSoundInstance = al_create_sample_instance(m_gameSound);
 		m_smashSoundInstance = al_create_sample_instance(m_smashSound);
-		al_set_sample_instance_playmode(m_gameSoundInstance, ALLEGRO_PLAYMODE_LOOP);
-		al_attach_sample_instance_to_mixer(m_gameSoundInstance, al_get_default_mixer());
 		al_attach_sample_instance_to_mixer(m_smashSoundInstance, al_get_default_mixer());
 	}
-	else
-	{
-		std::cout << "[DEBUG]: Can't load the super awesome song!" << std::endl;
+
+	if(m_gameSound) {
+		m_gameSoundInstance = al_create_sample_instance(m_gameSound);
+		al_set_sample_instance_playmode(m_gameSoundInstance, ALLEGRO_PLAYMODE_LOOP);
+		al_attach_sample_instance_to_mixer(m_gameSoundInstance, al_get_default_mixer());
 	}
 }
 
@@ -116,7 +117,7 @@ int Game::Update()
 
 			float x = m_players[i].GetPosition().x + 2*cos(alpha * 180.0 / PI);
 			float y = m_players[i].GetPosition().y + 2*sin(alpha * 180.0 / PI);
-			if(m_players[i].GetLastGap() > 200 && rand() % 10 == 0)
+			if(m_players[i].GetLastGap() > 200 && rand() % 20 == 0)
 			{
 				// gap
 			//	x += 15*cos(alpha * 180.0 / PI);
@@ -127,8 +128,8 @@ int Game::Update()
 			// check for collision
 			bool collision = false;
 
-			// check for walls
-			if(x < 0 || y < 0 || x > GAME_WIDTH || y > GAME_HEIGHT)
+			// check for wallsm
+			if(x <= 2 || y <= 2 || x >= GAME_WIDTH-2 || y >= GAME_HEIGHT-2)
 				collision = true;
 			else
 			{

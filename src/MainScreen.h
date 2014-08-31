@@ -5,6 +5,7 @@
 #include "Screen.h"
 #include "InputStateManager.h"
 #include "Metrics.h"
+
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_primitives.h>
@@ -17,7 +18,7 @@
 class MainScreen : public Screen 
 {
 private:
-	ALLEGRO_FONT *m_playerFont, *m_titleFont, *m_ipFont;
+	ALLEGRO_FONT *m_playerFont, *m_titleFont, *m_instrFont;
 	boost::shared_ptr<Game> m_game;
 
 	ALLEGRO_BITMAP *m_playerBitmaps[6];

@@ -15,13 +15,13 @@ int main(int argc, char **argv)
       return -1;
    }
  
-   al_set_new_display_flags(ALLEGRO_WINDOWED);
+   al_set_new_display_flags(ALLEGRO_FULLSCREEN);
    display = al_create_display(SCREEN_WIDTH, SCREEN_HEIGHT);
-   al_set_window_title(display, "Tolly");
+   al_set_window_title(display, "Achtung Remote");
 
    if(!display)
    {
-	   al_show_native_message_box(display, "Tolly", "Display Settings", "Display Window was not created successfully.", NULL, ALLEGRO_MESSAGEBOX_ERROR);
+	   al_show_native_message_box(display, "Achtung Remote", "Display Settings", "Display Window was not created successfully.", NULL, ALLEGRO_MESSAGEBOX_ERROR);
 	   return -1;
    }
 
@@ -111,7 +111,7 @@ Settings LoadSettings()
 
 	Settings settings;
 	settings.gamespeed = SPEED_MEDIUM;	// don't change the gamespeed yet, not sure if I should include this or not
-	settings.name = "Default Tolly Server";
+	settings.name = "Default Achtung Server";
 
 	if(!file.is_open())
 	{

@@ -3,8 +3,8 @@
 GameScreen::GameScreen(boost::shared_ptr<Game> &game) : m_timeOn(0.7), m_timeOff(0.3), m_timeStamp(al_current_time()), m_blink(false)
 {
 	m_game = game;
-	m_nameFont = al_load_ttf_font(TITLE_FONT, 14, 0);
-	m_scoreFont = al_load_ttf_font(TITLE_FONT, 30, 0);
+	m_nameFont = al_load_ttf_font_f(load_alfaslabone(), TITLE_FONT, 14, 0);
+	m_scoreFont = al_load_ttf_font_f(load_alfaslabone(), TITLE_FONT, 30, 0);
 }
 
 GameScreen::~GameScreen()
@@ -24,11 +24,14 @@ void GameScreen::Draw(ALLEGRO_DISPLAY *display)
 {
 	al_clear_to_color(al_map_rgb(0, 0, 0));
 
+	// draw surrounding border
+	al_draw_rectangle(1, 1, SCREEN_WIDTH-1, SCREEN_HEIGHT-1, al_map_rgb(195, 195, 195), 2);
+
 	// draw right box
 	al_draw_filled_rectangle(GAME_WIDTH, 0, SCREEN_WIDTH, SCREEN_HEIGHT, al_map_rgb(160, 160, 160));
 
 	// draw border
-	al_draw_filled_rectangle(GAME_WIDTH, 0, GAME_WIDTH + 4, SCREEN_HEIGHT, al_map_rgb(195, 195, 195));
+	al_draw_filled_rectangle(GAME_WIDTH, 0, GAME_WIDTH + 3, SCREEN_HEIGHT, al_map_rgb(195, 195, 195));
 
 	std::vector<Player> players = m_game->GetPlayers();
 
@@ -52,6 +55,10 @@ void GameScreen::Draw(ALLEGRO_DISPLAY *display)
 			if(!(m_game->GetGameState() == GSTATE_PRESTART && !Blink()))
 				al_draw_filled_circle(pieces[j].x, pieces[j].y, 2, players[i].GetRGBColor());
 		}
+
+		// draw the head because maybe we are in a gap
+		if(m_game->GetGameState() != GSTATE_PRESTART)
+			al_draw_filled_circle(players[i].GetPosition().x, players[i].GetPosition().y, 2, players[i].GetRGBColor());
 	}
 }
 

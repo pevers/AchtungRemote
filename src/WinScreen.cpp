@@ -3,8 +3,8 @@
 WinScreen::WinScreen(boost::shared_ptr<Game> &game)
 {
 	m_game = game;
-	m_textFont = al_load_ttf_font(TITLE_FONT, 20, 0);
-	m_winFont = al_load_ttf_font(TITLE_FONT, 50, 0);
+	m_textFont = al_load_ttf_font_f(load_alfaslabone(), TITLE_FONT, 20, 0);
+	m_winFont = al_load_ttf_font_f(load_alfaslabone(), TITLE_FONT, 50, 0);
 }
 
 WinScreen::~WinScreen()

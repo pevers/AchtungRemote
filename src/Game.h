@@ -18,7 +18,7 @@
 #define PI				3.14159265
 #define GAME_WIDTH		1000
 #define GAME_HEIGHT		SCREEN_HEIGHT
-#define TARGET_SCORE	15
+#define TARGET_SCORE	20
 
 /**
  * GSTATE_STOPPED	Game stopped

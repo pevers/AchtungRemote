@@ -5,6 +5,7 @@
 #define ALLEGRO_STATICLINK
 #endif 
 
+#include "AchtungResources.h"
 #include <allegro5/allegro.h>
 
 #define SCREEN_WIDTH	1152

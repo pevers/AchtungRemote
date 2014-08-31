@@ -25,12 +25,14 @@ void GameServer::OnRecv(std::vector<uint8_t> &buffer)
 	// message received from client, check if this is a new one or data from an existing one
 	TranslateMessage(buffer);
 
+#ifdef _DEBUG
 	std::cout << "[" << __FUNCTION__ << "] " << buffer.size() << " bytes" << std::endl;
 	for( size_t x = 0; x < buffer.size(); ++x )
 	{
 		std::cout << buffer[x];
 	}
 	std::cout << std::endl;
+#endif
 
 	// Start the next receive
 	Recv();
@@ -66,7 +68,9 @@ void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 	// check message type
 	if(buffer[0] == MESSAGE_NEW)
 	{
+#ifdef _DEBUG
 		std::cout << "[DEBUG]: New message received" << std::endl;
+#endif
 		if((int)m_players.size() >= MAX_PLAYERS || (m_serverState != SERVER_ACCEPT))
 		{
 			SendFull();
@@ -97,7 +101,9 @@ void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 	else if(buffer[0] == MESSAGE_CONTROL)
 	{
 		// check payload
+#ifdef _DEBUG
 		std::cout << "[DEBUG]: Control message received" << std::endl;
+#endif
 
 		int id = buffer[1];
 		int index = FindPlayer(id);
@@ -108,7 +114,9 @@ void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 	}
 	else if(buffer[0] == MESSAGE_START)
 	{
+#ifdef _DEBUG
 		std::cout << "[DEBUG]: Start message received" << std::endl;
+#endif
 
 		// start the game if there are enough players
 		if(m_serverState == SERVER_ACCEPT)
@@ -119,7 +127,9 @@ void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 	}
 	else if(buffer[0] == MESSAGE_QUIT)
 	{
+#ifdef _DEBUG
 		std::cout << "[DEBUG]: Quit message received" << std::endl;
+#endif
 
 		if(m_serverState == SERVER_ACCEPT || m_serverState == SERVER_ENDED)
 		{
@@ -127,21 +137,37 @@ void GameServer::TranslateMessage(std::vector<uint8_t> buffer)
 			int index = FindPlayer(id);
 			if(index < 0)
 				return;
-
+#ifdef _DEBUG
 			std::cout << "[DEBUG]: Removing player " << id << std::endl;
+#endif
 			m_players.erase(m_players.begin() + index);
 		}
 	}
 	else if(buffer[0] == MESSAGE_HELLO)
 	{
 		// Is it me you are looking for!
+#ifdef _DEBUG
 		std::cout << "[DEBUG]: HELLO message received!" << std::endl;
+#endif
 		if(m_serverState == SERVER_ACCEPT)
 			SendServerInfo(m_name);
 	}
+	else if(buffer[0] == MESSAGE_PING)
+	{
+#ifdef _DEBUG
+		std::cout << "[DEBUG]: Ping message received" << std::endl;
+#endif
+
+		if(m_serverState == SERVER_ACCEPT)
+		{
+			SendPong();
+		}
+	}
 	else
 	{
+#ifdef _DEBUG
 		std::cout << "[DEBUG]: Unknown message received" << std::endl;
+#endif
 	}
 }
 
@@ -158,6 +184,16 @@ void GameServer::SendOK(int player, int uid)
 	data.push_back((uint8_t)player);
 	data.push_back((uint8_t)uid);
 	Send(data);
+}
+
+/**
+ * Send Poing to the user with id <uid>
+ */
+void GameServer::SendPong()
+{
+	std::vector<uint8_t> data;
+	data.push_back(MESSAGE_PONG);
+	data.push_back((uint8_t)0);
 }
 
 /**

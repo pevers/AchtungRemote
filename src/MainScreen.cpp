@@ -8,23 +8,23 @@ Rect boxes[6] = { {150, MARGIN_Y, boxes[0].x + BOX_WIDTH, BOX_HEIGHT + MARGIN_Y}
 MainScreen::MainScreen(boost::shared_ptr<Game> &game)
 {
 	m_game = game;
-	m_titleFont = al_load_ttf_font(TITLE_FONT, 72, 0);
-	m_playerFont = al_load_ttf_font(TITLE_FONT, 20, 0);
-	m_ipFont = al_load_ttf_font(TITLE_FONT, 20, 0);
+	m_titleFont = al_load_ttf_font_f(load_alfaslabone(), TITLE_FONT, 72, 0);
+	m_playerFont = al_load_ttf_font_f(load_alfaslabone(), TITLE_FONT, 20, 0);
+	m_instrFont = al_load_ttf_font_f(load_alfaslabone(), TITLE_FONT, 20, 0);
 
-	m_playerBitmaps[0] = al_load_bitmap("Images/red.png");
-	m_playerBitmaps[1] = al_load_bitmap("Images/blue.png");
-	m_playerBitmaps[2] = al_load_bitmap("Images/green.png");
-	m_playerBitmaps[3] = al_load_bitmap("Images/orange.png");
-	m_playerBitmaps[4] = al_load_bitmap("Images/purple.png");
-	m_playerBitmaps[5] = al_load_bitmap("Images/yellow.png");
+	m_playerBitmaps[0] = al_load_bitmap_f(load_red(), ".png");
+	m_playerBitmaps[1] = al_load_bitmap_f(load_blue(), ".png");
+	m_playerBitmaps[2] = al_load_bitmap_f(load_green(), ".png");
+	m_playerBitmaps[3] = al_load_bitmap_f(load_orange(), ".png");
+	m_playerBitmaps[4] = al_load_bitmap_f(load_purple(), ".png");
+	m_playerBitmaps[5] = al_load_bitmap_f(load_yellow(), ".png");
 }
 
 MainScreen::~MainScreen()
 {
 	al_destroy_font(m_titleFont);
 	al_destroy_font(m_playerFont);
-	al_destroy_font(m_ipFont);
+	al_destroy_font(m_instrFont);
 
 	for(int i = 0; i < 6; i++)
 	{
@@ -35,9 +35,9 @@ MainScreen::~MainScreen()
 
 int MainScreen::Update()
 {
-	// check input, if the user hits ENTER we start the game if enough players joined
+	// check input, if the user hits SPACE we start the game if enough players joined
 	// TODO: Remove!
-	if(Input.keyboard.GetKeyPressed(ALLEGRO_KEY_ENTER))
+	if(Input.keyboard.GetKeyPressed(ALLEGRO_KEY_SPACE))
 	{
 		if(m_game->GetNumberOfPlayersInQueue() >= 1)
 		{
@@ -76,6 +76,9 @@ void MainScreen::Draw(ALLEGRO_DISPLAY *display)
 
 	// draw the 8 rectangles
 	DrawPlayerBoxes();
+
+	// draw instruction
+	al_draw_text(m_instrFont, al_map_rgb(160, 160, 160), 0, 0, ALLEGRO_ALIGN_LEFT, "SPACE - START GAME");
 }
 
 /**
